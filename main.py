@@ -38,7 +38,7 @@ while True:
                 else:
                     situation_id = 0
             elif rotation == "right_side":
-                if posedetect.find_angle(24, 12, 16) > 70:
+                if posedetect.find_angle(24, 12, 16) < 290:
 
                     situation_id = 0
                 else:
