@@ -29,7 +29,30 @@ while True:
         situation_id = 0
 
         if len(lmlist) != 0:
-            pass
+            rotation = posedetect.find_rotation()
+            if rotation == "back":
+                pass
+            elif rotation == "front":
+                pass
+            elif rotation == "right_side":
+                pass
+            elif rotation == "left_side":
+                pass
+
+        if situation_id == 0:
+            img = img0
+
+        elif situation_id == 1:
+            img = img1
+
+        elif situation_id == 2:
+            img = img2
+
+        elif situation_id == 3:
+            img = img3
+
+        img = cv2.resize(img, (frame.shape[1], int(frame.shape[0])))
+        frame = np.concatenate((frame, img), axis=0)
 
         current_time = time.time()
         fps = 1 / (current_time - previous_time)
@@ -47,4 +70,3 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
-

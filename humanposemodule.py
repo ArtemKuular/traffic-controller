@@ -45,13 +45,38 @@ class PoseDetector:
         return self.lmlist
 
     def find_angle(self, p1, p2, p3):
-        pass
+        # Get landmarks position
+        x1, y1 = self.lmlist[p1][1:]
+        x2, y2 = self.lmlist[p2][1:]
+        x3, y3 = self.lmlist[p3][1:]
+
+        # Calculate angle
+        angle = math.degrees(math.atan2(y3 - y2, x3 - x2) - math.atan2(y1 - y2, x1 - x2))
+
+        if angle < 0:
+            angle += 360
+
+        return angle
 
     def find_rotation(self):
         x1, y1 = self.lmlist[11][1:]
         x2, y2 = self.lmlist[12][1:]
-        if x2 > x1:
+
+        nx, ny = self.lmlist[0][1:]
+
+        body_height = self.find_dist(11, 24)
+
+        if x2 - x1 > 0.3 * body_height:
             return "back"
-        else:
-            return 'front'
+        elif x2 - x1 < - 0.3 * body_height:
+            return "front"
+        elif nx > x2:
+            return "right_side"
+        elif nx < x1:
+            return "left_side"
+
+    def find_dist(self, p1, p2):
+        x1, y1 = self.lmlist[p1][1:]
+        x2, y2 = self.lmlist[p2][1:]
+        return math.hypot(abs(x1-x2), abs(y1-y2))
 
