@@ -29,6 +29,8 @@ class PoseDetector:
             if draw_landmark:
                 self.mpdraw.draw_landmarks(frame, self.results.pose_landmarks, self.mppose.POSE_CONNECTIONS)
 
+        return frame
+
     def find_location(self, frame, draw_landmark=True):
         self.lmlist = []
         if self.results.pose_landmarks:

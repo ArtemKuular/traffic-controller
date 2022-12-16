@@ -31,13 +31,23 @@ while True:
         if len(lmlist) != 0:
             rotation = posedetect.find_rotation()
             if rotation == "back":
-                pass
+                situation_id = 0
             elif rotation == "front":
-                pass
+                if posedetect.find_dist(12, 16) < 0.4 * posedetect.find_dist(12, 24):
+                    situation_id = 1
+                else:
+                    situation_id = 0
             elif rotation == "right_side":
-                pass
+                if posedetect.find_angle(24, 12, 16) > 70:
+
+                    situation_id = 0
+                else:
+                    situation_id = 2
             elif rotation == "left_side":
-                pass
+                if posedetect.find_angle(24, 12, 16) > 70:
+                    situation_id = 3
+                else:
+                    situation_id = 2
 
         if situation_id == 0:
             img = img0
@@ -50,6 +60,8 @@ while True:
 
         elif situation_id == 3:
             img = img3
+        else:
+            img = img0
 
         img = cv2.resize(img, (frame.shape[1], int(frame.shape[0])))
         frame = np.concatenate((frame, img), axis=0)
