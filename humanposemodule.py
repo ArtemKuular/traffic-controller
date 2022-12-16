@@ -81,4 +81,3 @@ class PoseDetector:
         x1, y1 = self.lmlist[p1][1:]
         x2, y2 = self.lmlist[p2][1:]
         return math.hypot(abs(x1-x2), abs(y1-y2))
-

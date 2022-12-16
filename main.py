@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-import mediapipe as mp
 import time
 import humanposemodule as hpm
 
@@ -38,7 +37,7 @@ while True:
                 else:
                     situation_id = 0
             elif rotation == "right_side":
-                if posedetect.find_angle(24, 12, 16) < 290:
+                if posedetect.find_angle(24, 12, 16) > 70:
 
                     situation_id = 0
                 else:
