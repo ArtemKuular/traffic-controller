@@ -1,7 +1,16 @@
-import numpy as np
 import cv2
-import time
 import humanposemodule as hpm
+
+from tkinter import *
+from PIL import ImageTk, Image
+
+
+def exit_app():
+    global isOpened
+    isOpened = False
+
+
+isOpened = True
 
 cap = cv2.VideoCapture(0)
 
@@ -15,13 +24,26 @@ img3 = cv2.imread("images/3.png")
 
 posedetect = hpm.PoseDetector(detection_confident=0.8)
 
-while True:
+win = Tk()
+win.title("Traffic controller")
+win.resizable(False, False)
+win.configure(bg="white")
+
+check, frame = cap.read()
+if check:
+    canvas = Canvas(win, width=640, height=640, background="white")
+    canvas.pack()
+    Button(win, text="Exit", command=exit_app, width=10, height=2).pack()
+
+while isOpened:
+    win.update_idletasks()
+    win.update()
 
     check, frame = cap.read()
 
     if check:
 
-        frame = cv2.resize(frame, (1280, 720))
+        frame = cv2.resize(frame, (645, 400))
         frame = posedetect.find_pose(frame, draw_landmark=True)
         lmlist = posedetect.find_location(frame, draw_landmark=True)
 
@@ -62,16 +84,16 @@ while True:
         else:
             img = img0
 
-        img = cv2.resize(img, (frame.shape[1], int(frame.shape[0])))
-        frame = np.concatenate((frame, img), axis=0)
+        img = cv2.resize(img, (300, 200))
 
-        current_time = time.time()
-        fps = 1 / (current_time - previous_time)
-        previous_time = current_time
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        cv2.putText(frame, "frame rate: " + str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 5, (0, 255, 255), 5)
+        frametk = ImageTk.PhotoImage(image=Image.fromarray(frame))
+        imgtk = ImageTk.PhotoImage(image=Image.fromarray(img))
 
-        cv2.imshow('Traffic controller', frame)
+        canvas.create_image(320, 200, anchor=CENTER, image=frametk)
+        canvas.create_image(320, 520, anchor=CENTER, image=imgtk)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -80,4 +102,4 @@ while True:
         break
 
 cap.release()
-cv2.destroyAllWindows()
+win.destroy()
