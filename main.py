@@ -5,6 +5,8 @@ from tkinter import *
 from PIL import ImageTk, Image
 
 
+# Функция выхода из приложения
+
 def exit_app():
     global isOpened
     isOpened = False
@@ -14,15 +16,14 @@ isOpened = True
 
 cap = cv2.VideoCapture(0)
 
-previous_time = 0
-current_time = 0
-
 img0 = cv2.imread("images/0.png")
 img1 = cv2.imread("images/1.png")
 img2 = cv2.imread("images/2.png")
 img3 = cv2.imread("images/3.png")
 
 posedetect = hpm.PoseDetector(detection_confident=0.8)
+
+# Создание интерфейса
 
 win = Tk()
 win.title("Traffic controller")
@@ -35,19 +36,22 @@ if check:
     canvas.pack()
     Button(win, text="Exit", command=exit_app, width=10, height=2).pack()
 
+# Основной цикл
+
 while isOpened:
+    # Обновление
     win.update_idletasks()
     win.update()
 
     check, frame = cap.read()
+    situation_id = 0
 
+    # Идентификация позы, определение случаев
     if check:
 
         frame = cv2.resize(frame, (645, 400))
         frame = posedetect.find_pose(frame, draw_landmark=True)
         lmlist = posedetect.find_location(frame, draw_landmark=True)
-
-        situation_id = 0
 
         if len(lmlist) != 0:
             rotation = posedetect.find_rotation()
@@ -70,6 +74,7 @@ while isOpened:
                 else:
                     situation_id = 2
 
+        # Выбор случая
         if situation_id == 0:
             img = img0
 
@@ -83,6 +88,8 @@ while isOpened:
             img = img3
         else:
             img = img0
+
+        # Рендер картинки
 
         img = cv2.resize(img, (300, 200))
 
